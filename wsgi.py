@@ -1,13 +1,17 @@
-import time
 import flask
-import random
+import elasticsearch
 
 
 app = flask.Flask(__name__)
+es = elasticsearch.Elasticsearch("http://localhost:9201")
 
 
 @app.route('/')
 def home():
-    sleep_time = random.random()
-    time.sleep(sleep_time)
-    return {'message': 'hello world', 'sleep': sleep_time}
+    resp = es.search(
+        index="superdesk_archive",
+        body={"query": {"match_all": {}}},
+        size=20,
+    )
+
+    return {"resp": resp}

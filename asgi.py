@@ -1,14 +1,17 @@
-import random
-import asyncio
+import fastapi
+import elasticsearch
 
-from fastapi import FastAPI
 
-app = FastAPI()
+app = fastapi.FastAPI()
+es = elasticsearch.AsyncElasticsearch("http://localhost:9201")
 
 
 @app.get("/")
 async def home():
-    sleep_time = random.random()
-    await asyncio.sleep(sleep_time)
-    return {"message": "Hello world", "sleep": sleep_time}
+    resp = await es.search(
+        index="superdesk_archive",
+        body={"query": {"match_all": {}}},
+        size=20,
+    )
 
+    return {"resp": resp}
