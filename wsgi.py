@@ -3,8 +3,17 @@ import random
 import pymongo
 import elasticsearch
 
+from elasticapm.contrib.flask import ElasticAPM
+
 
 app = flask.Flask(__name__)
+app.config["ELASTIC_APM"] = {
+    "SERVICE_NAME": "wsgi",
+    "SECRET_TOKEN": "superdesk",
+}
+
+apm = ElasticAPM(app)
+
 es = elasticsearch.Elasticsearch("http://localhost:9201")
 mongo = pymongo.MongoClient()
 
