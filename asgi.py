@@ -1,3 +1,4 @@
+import random
 import fastapi
 import elasticsearch
 import motor.motor_asyncio
@@ -14,7 +15,9 @@ async def home():
 
     resp = await es.search(
         index="superdesk_archive",
-        body={"query": {"match_all": {}}},
+        body={"query": {"bool": {
+            "must": {"term": {"urgency": random.choice([2, 3, 4, 5, 6])}}
+        }}},
         size=20,
     )
 

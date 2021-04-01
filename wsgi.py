@@ -1,4 +1,5 @@
 import flask
+import random
 import pymongo
 import elasticsearch
 
@@ -14,7 +15,9 @@ def home():
 
     resp = es.search(
         index="superdesk_archive",
-        body={"query": {"match_all": {}}},
+        body={"query": {"bool": {
+            "must": {"term": {"urgency": random.choice([2, 3, 4, 5, 6])}}
+        }}},
         size=20,
     )
 
